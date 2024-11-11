@@ -1,16 +1,30 @@
 import React, { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { AuthProviderContext } from './AuthContext';
 
 const Navbar = () => {
-    const {name} = useContext(AuthProviderContext);
+    const { user, signOutUser ,setUser} = useContext(AuthProviderContext);
+    console.log(user);
+
+    const handleLogOut = () => {
+        signOutUser()
+            .then(() => {
+                console.log('User sign out successfully');
+                // setUser(null);
+            })
+            .catch((error) => console.log('Error', error.message))
+    }
 
     const links = <>
         <li><NavLink to='/'>Home</NavLink></li>
         <li><NavLink to='/login'>Login</NavLink></li>
         <li><NavLink to='/registration'>Registration</NavLink></li>
-        <li><NavLink to='/orders'>Orders</NavLink></li>
-      
+        {
+            user && <>
+                <li><NavLink to='/orders'>Orders</NavLink></li>
+            </>
+        }
+
     </>
     return (
         <div className="navbar bg-base-100 mb-10">
@@ -33,18 +47,26 @@ const Navbar = () => {
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                       {links}
+                        {links}
                     </ul>
                 </div>
                 <a className="btn btn-ghost text-xl">daisyUI</a>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
-                   {links}
+                    {links}
                 </ul>
             </div>
             <div className="navbar-end">
-                <a className="btn">{name}</a>
+                {
+                    user?.email ?
+                        <>
+                            <span>{user.email}</span>
+                            <a onClick={handleLogOut} className='btn'>LogOut</a>
+                        </>
+                        :
+                        <Link to='/login'>Login</Link>
+                }
             </div>
         </div>
     );

@@ -14,6 +14,7 @@ import Login from './components/Login.jsx';
 import Registration from './components/Registration.jsx';
 import Orders from './components/Orders.jsx';
 import AuthContext from './components/AuthContext.jsx';
+import SecretRoutes from './route/SecretRoutes.jsx';
 
 const router = createBrowserRouter([
   {
@@ -34,16 +35,28 @@ const router = createBrowserRouter([
       },
       {
         path: "/orders",
-        element:<Orders></Orders>,
+        element:<SecretRoutes><Orders></Orders></SecretRoutes>,
       },
     ]
   },
-]);
+],
+{
+  future: {
+    v7_normalizeFormMethod: true,
+    v7_fetcherPersist: true,
+    v7_partialHydration: true,
+    v7_relativeSplatPath: true,
+    v7_skipActionStatusRevalidation: true
+  },
+}
+);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
      <AuthContext>
-     <RouterProvider router={router} />
+     <RouterProvider router={router} future={{
+    v7_startTransition: true,
+  }} />
      </AuthContext>
   </StrictMode>,
 )
